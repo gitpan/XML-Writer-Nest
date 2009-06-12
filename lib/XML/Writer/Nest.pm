@@ -1,9 +1,11 @@
 package XML::Writer::Nest;
 
+our $VERSION = '0.04';
+
 use Moose;
-has 'tag'    => (is => 'ro', required => 1);
-has 'attr'   => (is => 'rw', default => undef);
-has 'writer' => (is => 'ro', required => 1);
+has 'tag'    => (isa => 'Str', is => 'ro', required => 1);
+has 'attr'   => (isa => 'ArrayRef[Maybe[Str]]',    is => 'ro', default => sub { [] } ); # hashref wont preserve order!
+has 'writer' => (isa => 'XML::Writer', is => 'ro', required => 1);
 
 
 use XML::Writer;
@@ -11,7 +13,9 @@ use XML::Writer;
 sub nest {
     my($self, $tag, $attr)=@_;
 
-    XML::Writer::Nest->new(tag => $tag, attr => $attr, writer => $self->writer);
+    #warn "Nest: @_";
+
+    XML::Writer::Nest->new(tag => $tag, attr => $attr || [], writer => $self->writer);
 }
     
     
@@ -19,9 +23,11 @@ sub nest {
 sub BUILD {
     my($self)=@_;
 
-    my %attr = defined($self->attr) ? %{$self->attr} : () ;
+    my @attr = defined($self->attr) ? @{$self->attr} : () ;
 
-    $self->writer->startTag($self->tag, %attr);
+    #warn "Writer" . $self->writer;
+    
+    $self->writer->startTag($self->tag, @attr);
 
     $self;
 }
@@ -38,13 +44,7 @@ sub DEMOLISH {
 
 XML::Writer::Nest - dataElement() for when you need to embed elements, not data
 
-=head1 VERSION
 
-Version 0.01
-
-=cut
-
-our $VERSION = '0.01';
 
 
 =head1 SYNOPSIS
@@ -53,9 +53,9 @@ our $VERSION = '0.01';
 
      my $writer = new XML::Writer;
 
-     {  my $level1 = XML::Writer::Nest->new(tag => 'level1', attr => { hee => 'haw', fee => 'fi' }, writer => $writer  );
+     {  my $level1 = XML::Writer::Nest->new(tag => 'level1', attr => [ hee => 'haw', fee => 'fi' ], writer => $writer  );
 
-        {  my $level2 = $level1->nest(level2 => { attr1 => 3 } ); # or call the class conc. again.
+        {  my $level2 = $level1->nest(level2 => [ attr1 => 3 ] ); # or call the class conc. again.
      
            {  my $level3 = $level2->nest('level3');
 
@@ -113,7 +113,7 @@ are done right after creating a new lexical scope with braces.
 
 =head2 Object-based constructor
 
-  { my $xml_nest2 = $xml_nest->new(tagname => \%$attr);
+  { my $xml_nest2 = $xml_nest->new(tagname => \@attr);
 
     # add some additional things for this nest level via $xml_writer->api_calls
   } # when $xml_nest2 goes out of scope, it calls $xml_writer->endTag automatically
