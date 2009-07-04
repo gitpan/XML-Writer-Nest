@@ -1,6 +1,6 @@
 package XML::Writer::Nest;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Moose;
 has 'tag'    => (isa => 'Str', is => 'ro', required => 1);
@@ -11,11 +11,17 @@ has 'writer' => (isa => 'XML::Writer', is => 'ro', required => 1);
 use XML::Writer;
 
 sub nest {
-    my($self, $tag, $attr)=@_;
+    my($self, $tag, @attr)=@_;
 
-    #warn "Nest: @_";
+    my @nattr;
 
-    XML::Writer::Nest->new(tag => $tag, attr => $attr || [], writer => $self->writer);
+    if (scalar @attr and ref $attr[0] eq 'ARRAY') {
+	@nattr = @{$attr[0]};
+    } else {
+	@nattr = @attr;
+    }
+
+    XML::Writer::Nest->new(tag => $tag, attr => \@nattr, writer => $self->writer);
 }
     
     
@@ -106,20 +112,52 @@ are done right after creating a new lexical scope with braces.
 
 =head2 Class-based constructor
 
-  { my $xml_nest = XML::Writer::Nest->new(tag => 'tagname', attr => \%$attr, writer => $xml_writer);
+  { my $xml_nest = XML::Writer::Nest->new(tag => 'tagname', attr => \@attr, writer => $xml_writer);
 
     # add some additional things for this nest level via $xml_writer->api_calls
   } # when $xml_nest goes out of scope, it calls $xml_writer->endTag automatically
 
 =head2 Object-based constructor
 
-  { my $xml_nest2 = $xml_nest->new(tagname => \@attr);
+  { my $xml_nest2 = $xml_nest->nest(tagname => \@attr);
 
     # add some additional things for this nest level via $xml_writer->api_calls
   } # when $xml_nest2 goes out of scope, it calls $xml_writer->endTag automatically
 
+  { my $xml_nest2 = $xml_nest->nest(tagname => @attr);
+
+    # add some additional things for this nest level via $xml_writer->api_calls
+  } # when $xml_nest2 goes out of scope, it calls $xml_writer->endTag automatically
+
+Please note: the object-level constructor will B<either> an arrayref or array of attributes.
+The class-based constructor will take B<only> an B<arrayref> of attributes.
+
 
 =head1 DISCUSSION
+
+=head2 Caveat emptor
+
+If you wish to nest elements at the same level ("sibling elements"), then you must brace each:
+
+  #!/usr/bin/perl
+
+  use strict;
+  use XML::Writer::Nest;
+
+  my $output;
+  my $writer = new XML::Writer(OUTPUT => $output);
+  my $main = new XML::Writer::Nest(tag => 'main', writer => $writer);
+  
+  {
+      my $head = $main->nest('head');
+  
+  }
+  {
+      my $body = $main->nest('body');
+  }
+
+  print STDOUT $output . "\n\n";
+
 
 =head2 XML::Generator
 
