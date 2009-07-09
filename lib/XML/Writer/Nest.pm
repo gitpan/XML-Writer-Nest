@@ -1,6 +1,6 @@
 package XML::Writer::Nest;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Moose;
 has 'tag'    => (isa => 'Str', is => 'ro', required => 1);
