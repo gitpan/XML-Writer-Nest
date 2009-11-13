@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               XML-Writer-Nest
-version:            0.06
+version:            0.08
 abstract:           dataElement() for when you need to embed elements, not data
 author:
     - Terrence Brannon <metaperl@gmail.com>
@@ -11,13 +11,14 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    Moose:       0
-    Test::More:  0
+    Moose:        0
+    Test::More:   0
+    XML::Writer:  0
 no_index:
     directory:
         - t
         - inc
-generated_by:       ExtUtils::MakeMaker version 6.50
+generated_by:       ExtUtils::MakeMaker version 6.54
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4

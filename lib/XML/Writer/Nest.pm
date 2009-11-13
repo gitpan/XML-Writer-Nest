@@ -1,6 +1,6 @@
 package XML::Writer::Nest;
 
-our $VERSION = '0.06';
+our $VERSION = '0.08';
 
 use Moose;
 has 'tag'    => (isa => 'Str', is => 'ro', required => 1);
@@ -71,7 +71,7 @@ XML::Writer::Nest - dataElement() for when you need to embed elements, not data
 
     } # endTag created automatically
 
-Vanilla XML::Writer would not have indentation and you would have to manually close your start tags:
+Vanilla L<XML::Writer> would not have indentation and you would have to manually close your start tags:
 
   $writer->startTag("level1");
   $writer->startTag("level2");
