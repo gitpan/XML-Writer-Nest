@@ -1,6 +1,6 @@
 package XML::Writer::Nest;
 
-our $VERSION = '0.08';
+our $VERSION = '1.0';
 
 use Moose;
 has 'tag'    => (isa => 'Str', is => 'ro', required => 1);
@@ -205,6 +205,15 @@ the desired XML output.
 =head1 AUTHOR
 
 Terrence Brannon, C<< <metaperl at gmail.com> >>
+
+=head1 SEE ALSO
+
+=head2 "Constructive Use of Destructors"
+
+L<http://www.metaperl.org/publications>
+
+This talk to the Columbus, OH Perl mongers discusses XML::Writer::Nest in detail.
+
 
 =head1 BUGS
 
