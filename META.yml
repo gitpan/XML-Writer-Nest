@@ -1,24 +1,20 @@
---- #YAML:1.0
-name:               XML-Writer-Nest
-version:            1.0
-abstract:           dataElement() for when you need to embed elements, not data
+---
+abstract: 'work with XML writer using lexical scope'
 author:
-    - Terrence Brannon <metaperl@gmail.com>
-license:            perl
-distribution_type:  module
-configure_requires:
-    ExtUtils::MakeMaker:  0
+  - 'Terrence Brannon'
 build_requires:
-    ExtUtils::MakeMaker:  0
-requires:
-    Moose:        0
-    Test::More:   0
-    XML::Writer:  0
-no_index:
-    directory:
-        - t
-        - inc
-generated_by:       ExtUtils::MakeMaker version 6.54
+  Test::More: 0
+  Test::XML: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.30
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.200008, CPAN::Meta::Converter version 2.110930'
+license: perl
 meta-spec:
-    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
-    version:  1.4
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: XML-Writer-Nest
+requires:
+  Moose: 0
+  XML::Writer: 0
+version: 1.111990

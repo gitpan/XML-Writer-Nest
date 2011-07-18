@@ -1,6 +1,7 @@
 package XML::Writer::Nest;
+# ABSTRACT: work with XML writer using lexical scope
 
-our $VERSION = '1.0';
+
 
 use Moose;
 has 'tag'    => (isa => 'Str', is => 'ro', required => 1);
@@ -44,22 +45,20 @@ sub DEMOLISH {
     $self->writer->endTag();
 }
 
-
+1; # End of XML::Writer::Nest
 
 =head1 NAME
 
 XML::Writer::Nest - dataElement() for when you need to embed elements, not data
 
-
-
-
 =head1 SYNOPSIS
 
     use XML::Writer::Nest;
 
-     my $writer = new XML::Writer;
+    my $W = XML::Writer->new;
+    my $A = [ maintain => 'order', in => 'attributes'];
 
-     {  my $level1 = XML::Writer::Nest->new(tag => 'level1', attr => [ hee => 'haw', fee => 'fi' ], writer => $writer  );
+    {  my $level1 = XML::Writer::Nest->new(tag => 'level1', attr => $A, writer => $W);
 
         {  my $level2 = $level1->nest(level2 => [ attr1 => 3 ] ); # or call the class conc. again.
      
@@ -71,7 +70,8 @@ XML::Writer::Nest - dataElement() for when you need to embed elements, not data
 
     } # endTag created automatically
 
-Vanilla L<XML::Writer> would not have indentation and you would have to manually close your start tags:
+Vanilla L<XML::Writer> would not have indentation and you would have to manually close your 
+start tags:
 
   $writer->startTag("level1");
   $writer->startTag("level2");
@@ -80,9 +80,6 @@ Vanilla L<XML::Writer> would not have indentation and you would have to manually
   $writer->endTag();
   $writer->endTag();
 
-
-
-
 =head1 DESCRIPTION
 
 When nesting XML elements with XML::Writer, you have to manually close your startTags. 
@@ -90,15 +87,6 @@ Also, you dont necessarily have any visual feedback via indentation for each lev
 of tag nesting. 
 
 C<< XML::Writer::Nest >> solves both of those problems.
-
-=head2 XML::Generator
-
-L<XML::Generator|XML::Generator> solves this problem a different way. But 
-I dont see an easy way to make use of object-oriented dispatch to specialize
-and generalize XML production with it.
-
-My current module and Moose's C<inner> work just fine together.
-
 
 =head1 API
 
@@ -177,28 +165,6 @@ automatic source-code indentation is especially handy when you are creating high
 Another thing I don't like about XML::Generator is that you must use one highly nested function call to produce the
 output document. I prefer brace-levels and a series of calls to the XML::Writer interface.
 
-=head2 Practical Comparison
-
-Let's take the synopsis example from XML::Generator and write it in all 3 approaches. First let's take a look at 
-the desired XML output.
-
-  <foo xmlns:qux="http://qux.com/">
-     <bar baz="3">
-       <bam />
-     </bar>
-     <qux:bar>Hey there, world</qux:bar>
-   </foo>
-
-=head3 XML::Generator
-
-  use XML::Generator ':pretty';
-
-  print foo(bar({ baz => 3 }, bam()),
-            bar([ 'qux' => 'http://qux.com/' ],
-                  "Hey there, world"));
-
-
-
 
 =head2
 
@@ -207,6 +173,10 @@ the desired XML output.
 Terrence Brannon, C<< <metaperl at gmail.com> >>
 
 =head1 SEE ALSO
+
+=head2 XML::Writer
+
+L<XML::Writer>
 
 =head2 "Constructive Use of Destructors"
 
@@ -218,51 +188,20 @@ This talk to the Columbus, OH Perl mongers discusses XML::Writer::Nest in detail
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-xml-writer-nest at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=XML-Writer-Nest>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=XML-Writer-Nest>.  
+I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
 
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc XML::Writer::Nest
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=XML-Writer-Nest>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/XML-Writer-Nest>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/XML-Writer-Nest>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/XML-Writer-Nest/>
-
-=back
-
-
 =head1 ACKNOWLEDGEMENTS
 
-Many thanks to #moose, especially Jeese Luehrs (doy)!, matt trout, doy, and confound.
-
+Many thanks to #moose, especially Jeese Luehrs (doy)!, matthew s. trout, doy, and confound.
 
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 Terrence Brannon, all rights reserved.
+Copyright C<< $forever >> by Terrence Brannon, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
@@ -270,4 +209,4 @@ under the same terms as Perl itself.
 
 =cut
 
-1; # End of XML::Writer::Nest
+
